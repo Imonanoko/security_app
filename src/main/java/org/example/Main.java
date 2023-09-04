@@ -157,13 +157,13 @@ public class Main {
     }
 
 
-    public static void main(String [] args) {
+    public static void main() {
         //加密
         String filePath = ".\\src\\main\\java\\org\\example\\test.txt";
 //        FileEncryption(filePath,"jfirowlskdvjoujaoiwfjorinvoa",true);
-//        FileEncryption(filePath,"jfirowlskdvjoujaoiwfjorinvoa",false);
+        FileEncryption(filePath,"jfirowlskdvjoujaoiwfjorinvoa",false);
 //        //解密
-//        filePath = ".\\src\\main\\java\\org\\example\\FDAEaSEncryption\\test.txt";
+//        filePath = ".\\src\\main\\java\\org\\example\\FDAESEncryption\\test.txt";
 //        FileDecryption(filePath,"jfirowlskdvjoujaoiwfjorinvoa",true);
 //        filePath = ".\\src\\main\\java\\org\\example\\DSAESEncryption\\test.txt";
 //        FileDecryption(filePath,"jfirowlskdvjoujaoiwfjorinvoa",false);

@@ -391,25 +391,26 @@ public class library {
             power[i] = a << i;
         }
         for (int i = 0; i < Binary_bLength; i++) {
-            if (Binary_b.charAt(Binary_bLength-1-i) == '1') {
+            if (Binary_b.charAt(Binary_bLength - 1 - i) == '1') {
                 product = GF28Add(product, power[i]);
             }
         }
 
         int productLength = Integer.toBinaryString(product).length();
-        while (productLength>8){
-            product = GF28Add(product,table.GF28ModList[productLength-9]);
+        while (productLength > 8) {
+            product = GF28Add(product, table.GF28ModList[productLength - 9]);
             productLength = Integer.toBinaryString(product).length();
         }//1110101010
         return product;
     }
-    public static List<Integer> GF28MatrixMultiply(List<Integer> RightMatrix,List<Integer> LeftMatrix,int size){
+
+    public static List<Integer> GF28MatrixMultiply(List<Integer> RightMatrix, List<Integer> LeftMatrix, int size) {
         List<Integer> outcome = new ArrayList<>();
-        for(int i=0;i<size;i++){
-            for(int j=0;j<size;j++){
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 int tmp = 0;
-                for(int k=0;k<size;k++){
-                    tmp = GF28Add(tmp,GF28Multiply(RightMatrix.get(j+4*k),LeftMatrix.get(4*i+k)));
+                for (int k = 0; k < size; k++) {
+                    tmp = GF28Add(tmp, GF28Multiply(RightMatrix.get(j + 4 * k), LeftMatrix.get(4 * i + k)));
                 }
                 outcome.add(tmp);
             }
@@ -435,32 +436,86 @@ public class library {
     public static List<Integer> MixColumn(List<Integer> P, int n) {
         List<Integer> outcome = new ArrayList<>();
         List<Integer> matrix = new ArrayList<>(table.MixColumn.get(n));
-        for(int i=0;i<4;i++){
-            for(int j=0;j<4;j++){
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
                 int tmp = 0;
-                for(int k=0;k<4;k++){
-                    tmp = GF28Add(tmp,GF28Multiply(matrix.get(j+4*k),P.get(4*i+k)));
+                for (int k = 0; k < 4; k++) {
+                    int add=-1;
+                    if (matrix.get(j + 4 * k) == 0) {
+                        add = 0;
+                    } else if (matrix.get(j + 4 * k) == 1) {
+                        add = P.get(4 * i + k);
+                    } else {
+                        int C = matrix.get(j + 4 * k) - 2;
+                        add = switch (C / 20) {
+                            case 0 -> MixColumnTable0.MulTable.get(C % 20).get(P.get(4 * i + k));
+                            case 1 -> MixColumnTable1.MulTable.get(C % 20).get(P.get(4 * i + k));
+                            case 2 -> MixColumnTable2.MulTable.get(C % 20).get(P.get(4 * i + k));
+                            case 3 -> MixColumnTable3.MulTable.get(C % 20).get(P.get(4 * i + k));
+                            case 4 -> MixColumnTable4.MulTable.get(C % 20).get(P.get(4 * i + k));
+                            case 5 -> MixColumnTable5.MulTable.get(C % 20).get(P.get(4 * i + k));
+                            case 6 -> MixColumnTable6.MulTable.get(C % 20).get(P.get(4 * i + k));
+                            case 7 -> MixColumnTable7.MulTable.get(C % 20).get(P.get(4 * i + k));
+                            case 8 -> MixColumnTable8.MulTable.get(C % 20).get(P.get(4 * i + k));
+                            case 9 -> MixColumnTable9.MulTable.get(C % 20).get(P.get(4 * i + k));
+                            case 10 -> MixColumnTable10.MulTable.get(C % 20).get(P.get(4 * i + k));
+                            case 11 -> MixColumnTable11.MulTable.get(C % 20).get(P.get(4 * i + k));
+                            case 12 -> MixColumnTable12.MulTable.get(C % 20).get(P.get(4 * i + k));
+                            default -> add;
+                        };
+                    }
+                    tmp = GF28Add(tmp, add);
+
+//                    tmp = GF28Add(tmp,GF28Multiply(matrix.get(j+4*k),P.get(4*i+k)));
                 }
                 outcome.add(tmp);
             }
         }
         return outcome;
     }
+
     //舊版
     public static List<Integer> InverseMixColumn(List<Integer> C, int n) {
         List<Integer> outcome = new ArrayList<>();
         List<Integer> matrix = new ArrayList<>(table.InverseMixColumn.get(n));
-        for(int i=0;i<4;i++){
-            for(int j=0;j<4;j++){
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
                 int tmp = 0;
-                for(int k=0;k<4;k++){
-                    tmp = GF28Add(tmp,GF28Multiply(matrix.get(j+4*k),C.get(4*i+k)));
+                for (int k = 0; k < 4; k++) {
+                    int add=-1;
+                    if (matrix.get(j + 4 * k) == 0) {
+                        add = 0;
+                    } else if (matrix.get(j + 4 * k) == 1) {
+                        add = C.get(4 * i + k);
+                    } else {
+                        int P = matrix.get(j + 4 * k) - 2;
+                        add = switch (P / 20) {
+                            case 0 -> MixColumnTable0.MulTable.get(P % 20).get(C.get(4 * i + k));
+                            case 1 -> MixColumnTable1.MulTable.get(P % 20).get(C.get(4 * i + k));
+                            case 2 -> MixColumnTable2.MulTable.get(P % 20).get(C.get(4 * i + k));
+                            case 3 -> MixColumnTable3.MulTable.get(P % 20).get(C.get(4 * i + k));
+                            case 4 -> MixColumnTable4.MulTable.get(P % 20).get(C.get(4 * i + k));
+                            case 5 -> MixColumnTable5.MulTable.get(P % 20).get(C.get(4 * i + k));
+                            case 6 -> MixColumnTable6.MulTable.get(P % 20).get(C.get(4 * i + k));
+                            case 7 -> MixColumnTable7.MulTable.get(P % 20).get(C.get(4 * i + k));
+                            case 8 -> MixColumnTable8.MulTable.get(P % 20).get(C.get(4 * i + k));
+                            case 9 -> MixColumnTable9.MulTable.get(P % 20).get(C.get(4 * i + k));
+                            case 10 -> MixColumnTable10.MulTable.get(P % 20).get(C.get(4 * i + k));
+                            case 11 -> MixColumnTable11.MulTable.get(P % 20).get(C.get(4 * i + k));
+                            case 12 -> MixColumnTable12.MulTable.get(P % 20).get(C.get(4 * i + k));
+                            default -> add;
+                        };
+                    }
+                    tmp = GF28Add(tmp, add);
+
+//                    tmp = GF28Add(tmp, GF28Multiply(matrix.get(j + 4 * k), C.get(4 * i + k)));
                 }
                 outcome.add(tmp);
             }
         }
         return outcome;
     }
+
     //新版
 //    public static List<Integer> MixColumn(List<Integer> P, int n) {
 //        List<Integer> outcome = new ArrayList<>();
